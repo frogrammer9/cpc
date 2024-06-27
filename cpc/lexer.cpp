@@ -65,12 +65,12 @@ std::vector<cpc::Token> cpc::Lexer::tokenise(std::filesystem::path filepath)
 				numbase = 10;
 				canSelectBase = true;
 				stmOut.clear();
-				if (std::iswspace(curr)) i++;
-				else if (prev == '-' && std::iswdigit(curr)) { type = cpc::Token::TokenType::intLiteral; stmOut += prev, stmOut += curr, i++; }
+				if (prev == '-' && std::iswdigit(curr)) { type = cpc::Token::TokenType::intLiteral; stmOut += prev, stmOut += curr, i++; }
 				else if (std::iswpunct(prev)) type = Token::TokenType::OP_empty;
 				else if (std::iswdigit(curr)) type = cpc::Token::TokenType::intLiteral;
 				else if (curr == '.') { type = cpc::Token::TokenType::floatLiteral; stmOut += curr, i++; }
 				else if (std::iswalpha(curr)) type = cpc::Token::TokenType::stringLiteral;
+				else if (std::iswspace(curr)) i++;
 				else type = cpc::Token::TokenType::none, /*temp*/ i++;
 				continue;
 			//Literals
