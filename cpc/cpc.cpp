@@ -14,7 +14,7 @@ int main()
 {
 	std::vector<cpc::Token> tokens;
 	try {
-		tokens = cpc::Lexer::tokenise("../testfiles/test.txt");
+		tokens = cpc::Lexer::tokenise(SRC);
 	}
 	catch (cpc::LexerError& error) { error.log(); }
 	for (auto a : tokens) {
