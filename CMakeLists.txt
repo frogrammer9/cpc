@@ -15,5 +15,5 @@ project ("cpc")
 add_subdirectory ("cpc")
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test.txt
-        DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/test.txt
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/testfiles
 )

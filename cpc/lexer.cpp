@@ -1,10 +1,27 @@
 #include "lexer.hpp"
+#include "langSpecs.hpp"
+#include <climits>
 #include <fstream>
 #include <cwctype>
 #include <iostream>
+#include <istream>
 #include <string>
 
 #define ERROR_POS getPos(i, llv)
+
+cpc::Token::TokenType isKeyword(std::wstring str) {
+	for(auto a : cpc::Keywords) {
+		if(a.first == str) return a.second;
+	}
+	return cpc::Token::TokenType::none;
+}
+
+cpc::Token::TokenType isOperator(std::wstring str) {
+	for(auto a : cpc::Operators) {
+		if(a.first == str) return a.second;
+	}
+	return cpc::Token::TokenType::none;
+}
 
 std::vector<uint32_t> getLineLengts(std::wstringstream& ss) {
 	std::vector<uint32_t> charCounts;
@@ -21,6 +38,7 @@ std::pair<uint32_t, uint32_t> getPos(uint32_t pos, const std::vector<uint32_t>& 
 		if (pos > llv.at(i) + 1) pos -= llv.at(i) + 1;
 		else return { i + 1, pos + 1 };
 	}
+	return {UINT_MAX, UINT_MAX};
 }
 
 std::vector<cpc::Token> cpc::Lexer::tokenise(std::filesystem::path filepath)
@@ -49,6 +67,7 @@ std::vector<cpc::Token> cpc::Lexer::tokenise(std::filesystem::path filepath)
 				stmOut.clear();
 				if (std::iswspace(curr)) i++;
 				else if (prev == '-' && std::iswdigit(curr)) { type = cpc::Token::TokenType::intLiteral; stmOut += prev, stmOut += curr, i++; }
+				else if (std::iswpunct(prev)) type = Token::TokenType::OP_empty;
 				else if (std::iswdigit(curr)) type = cpc::Token::TokenType::intLiteral;
 				else if (curr == '.') { type = cpc::Token::TokenType::floatLiteral; stmOut += curr, i++; }
 				else if (std::iswalpha(curr)) type = cpc::Token::TokenType::stringLiteral;
@@ -108,6 +127,18 @@ std::vector<cpc::Token> cpc::Lexer::tokenise(std::filesystem::path filepath)
 			case cpc::Token::TokenType::stringLiteral:
 
 				continue;
+			case cpc::Token::TokenType::OP_empty:
+				std::wstring op = stmOut + prev;
+				auto opData1 = isOperator(op);
+				if(opData1 != cpc::Token::TokenType::none) { stmOut = op; i++; }
+				auto opData2 = isOperator(op + curr);
+				if(opData2 == cpc::Token::TokenType::none) {
+					cpc::Token tok;
+					tok.type = opData1;
+					out.push_back(tok);
+					type = Token::TokenType::none;
+				}
+			continue; 
 			}
 		}
 	}

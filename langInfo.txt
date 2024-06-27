@@ -1,0 +1,74 @@
+Types:
+	bool
+	char
+	u/intN - N : 8, 16, 32, 64
+	float
+	double
+
+	int == int32
+	uint == uint32
+
+Arrays:
+	arrays support dynamic allocations on stack
+
+	arrays have .size getter that is O(0) memory 
+
+	int32[12] arr; - array bracekts are alweys next to the type
+	arr.size; - no prathesis
+
+	during compilation variable of type array stores its identifier and size so .size work like precompiler derective
+
+	in debug mode arrays will have bound checking
+
+Opperators:
+1: brakets
+2:
+	++ - increment (++i, i++ - the same as in c)
+	-- - decrement
+	& - get address
+	* - dereference
+3:
+	* - multiply [=]
+	/ - devide [=]
+4:
+	+ - add [=]
+	- - substract [=]
+5:
+	| - bit or [=]
+	& - bit and [=]
+	^ - bit xor [=]
+	~ - bit not [=]
+6:
+	>> - bitshift right (shifting by 0 returns the same value AND IS A DEFINED BEHAVIOUR) [=]
+	<< - bitshift left [=]
+7:
+	== - equal
+	>= - greater or equal
+	<= - less or equal
+	< - less
+	> - greater
+	!= - different
+8:
+	&& - logic and
+	|| - logic or
+	^^ - logic xor
+9:
+	= - assign (only one per expression)
+[=] on operator can be connected with the assign operator makeing it the weakest operator
+
+Classes:
+
+Class Name { : public by default
+	Name(); - constructor
+	~Name(); - destructor
+	copy Name(): - copy constructor
+	move Name(); - move contructor
+	
+};
+
+
+
+
+
+
+
