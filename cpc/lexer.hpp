@@ -1,39 +1,24 @@
-#ifndef LEXER_HPP
-#define LEXER_HPP
+#ifndef CPC_LEXER
+#define CPC_LEXER
 
-#include <filesystem>
+#include <optional>
+#include <string>
 #include <vector>
-#include "langSpecs.hpp"
+#include "langSpec.hpp"
 
 namespace cpc {
 
-	struct LexerError : public std::exception {
-		LexerError(std::pair<uint32_t, uint32_t> pos, std::string msg) : errorPos(pos), errorMsg(msg) {}
-		std::pair<uint32_t, uint32_t> errorPos;
-		std::string errorMsg;
-		void log() { std::cerr << "Lexer: (" << errorPos.first << ", " << errorPos.second << ") : " << errorMsg << std::endl; }
-	};
+struct Token {
+	Token(ls::TokenType t, const std::wstring val) : type(t), value(val) {}
+	Token(ls::TokenType t) : type(t), value(std::nullopt) {}
 
-class Lexer
-{
-public:
-	~Lexer();
-	Lexer(const Lexer&) = delete;
-	Lexer(Lexer&&) = delete;
-	Lexer& operator=(const Lexer&) = delete;
-	Lexer& operator=(Lexer&&) = delete;
-
-
-	
-
-	static std::vector<cpc::Token> tokenise(std::filesystem::path filepath);
-
-private:
-	Lexer();
-
+	ls::TokenType type;
+	std::optional<std::wstring> value;
 };
 
+std::vector<Token> tokenise(const std::wstring& code); 
+
+}
+std::wostream& operator<<(std::wostream& os, const cpc::Token& tok);
 
 #endif
-}
-

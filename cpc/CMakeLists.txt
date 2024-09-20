@@ -3,12 +3,9 @@
 #
 
 # Add source to this project's executable.
-add_executable (cpc 
-"cpc.cpp" 
-"lexer.cpp"
-"lexer.hpp"
-"langSpecs.hpp"
-)
+file(GLOB_RECURSE CPC_SRC "*.cpp" "*.hpp")
+
+add_executable(cpc ${CPC_SRC})
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET cpc PROPERTY CXX_STANDARD 20)
