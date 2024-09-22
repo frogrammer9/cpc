@@ -2,5 +2,6 @@
 clear;
 cmake . --preset linux-debug;cd out/build/linux-debug;
 if ninja ; then 
-	./cpc/cpc
+	cd ../../..;
+	./out/build/linux-debug/cpc/cpc $1;
 fi

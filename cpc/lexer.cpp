@@ -26,20 +26,20 @@ std::vector<cpc::Token> cpc::tokenise(const std::wstring& code) {
 	std::vector<Token> tokensOut;
 
 	enum State {
-		none,
+		start,
 		base_select, zero_ignore, minus_analizer, dot_analizer, int10_literal, int16_literal, int2_literal, float_literal,
 		string_literal, ident, string_special_char,
 		symbol, complete,
-		comment_line, comment_block, comment_block_exit 
-	} state = none;
-
+		comment_line, comment_block
+	} state = start;
+	//TODO: Comments dont work at all
 	std::wstring buffer;
 	ls::TokenType type = ls::NONE;
 	size_t inx = 0;
 
 	while(inx < code.size()) {
 		switch(state) {
-			case none:
+			case start:
 				if(std::iswspace(code[inx])) inx++;
 				else if(code[inx] == '"') {state = string_literal; inx++;}
 				else if(code[inx] == '-') {state = minus_analizer; inx++;}
@@ -120,10 +120,8 @@ std::vector<cpc::Token> cpc::tokenise(const std::wstring& code) {
 				inx++; 
 				state = string_literal;
 			break;
-			case symbol: {
-				if(type == ls::SLASH && code[inx] == '/') {state = comment_line; buffer.clear(); type = ls::NONE; continue;} //TODO: This should be done better
-				if(type == ls::SLASH && code[inx] == '*') {state = comment_block; buffer.clear(); type = ls::NONE; continue;}
-				if(buffer == L"/*") {state = comment_line; buffer.clear(); continue;}
+			case symbol: { //TODO: This will nead a small rework (if token "-" doesnt exist token "--" will not be valid)
+				if(!std::iswpunct(code[inx])) {state = complete; continue;}
 				auto elem = ls::symbols.find(buffer + code[inx]);
 				if(elem == ls::symbols.end()) {state = complete; continue;}
 				type = elem->second;
@@ -131,18 +129,28 @@ std::vector<cpc::Token> cpc::tokenise(const std::wstring& code) {
 			}
 			break;
 			case complete: {
-				std::map<std::wstring, ls::TokenType>::iterator mIt;
-				if(type == ls::IDENT && (mIt = ls::keywords.find(buffer)) != ls::keywords.end()) tokensOut.emplace_back(mIt->second); 
-				else if(ls::symbols.find(buffer) != ls::symbols.end()) tokensOut.emplace_back(type);
-				else tokensOut.emplace_back(type, buffer);
+				if(buffer == ls::comment_line_symbol) state = comment_line;
+				else if(buffer == ls::comment_block_begin_symbol) state = comment_block;
+				else {
+					std::map<std::wstring, ls::TokenType>::const_iterator mIt;
+					if(type == ls::IDENT && (mIt = ls::keywords.find(buffer)) != ls::keywords.end()) tokensOut.emplace_back(mIt->second); 
+					else if(ls::symbols.find(buffer) != ls::symbols.end()) tokensOut.emplace_back(type);
+					else tokensOut.emplace_back(type, buffer);
+					state = start;
+				}
 				buffer.clear();
 				type = ls::NONE;
-				state = none;
 			}
 			break;
-			case comment_line: if(code[inx] == '\n' || code[inx] == '\r') state = none; break;
-			case comment_block: if(code[inx] == '*') state = comment_block_exit; break;
-			case comment_block_exit: if(code[inx] == '/') state = none; state = comment_block; break;
+			case comment_line: if(code[inx] == '\n' || code[inx] == '\r') state = start; break;
+			case comment_block: 
+				if(buffer.size() < ls::comment_block_end_symbol.size()) buffer += code[inx++];
+				else {
+					std::wmemmove(&buffer[0], &buffer[1], buffer.size() - 1);
+					buffer[buffer.size() - 1] = code[inx++];
+					if(buffer == ls::comment_block_end_symbol) state = start;
+				}
+			break;
 		}
 	}
 

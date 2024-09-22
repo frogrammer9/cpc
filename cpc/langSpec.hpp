@@ -6,7 +6,7 @@
 namespace cpc::ls {
 
 enum TokenType {
-	FOR, WHILE, DO, I8, I16, I32, I64, U8, U16, U32, U64, F32, F64, NULLPTR, RETURN, IF, ELSE, AUTO, BREAK, CASE, SWITCH, CONST, DEFAULT, 
+	FOR, WHILE, DO, I8, I16, I32, I64, U8, U16, U32, U64, F32, F64, BOOL, TRUE, FALSE, NULLPTR, RETURN, IF, ELSE, AUTO, BREAK, CASE, SWITCH, CONST, DEFAULT, 
 	CONTINUE, ENUM, STATIC, STRUCT, CLASS, UNION, VOID, SIZEOF, 
 	//symbols
 	OPEN_PARENTHESES, CLOSE_PARENTHESES, OPEN_BRACKETS, CLOSE_BRACKETS, OPEN_BRACES, CLOSE_BRACES, PLUS, DASH, STAR, PERCENT,
@@ -18,12 +18,17 @@ enum TokenType {
 	NONE
 };
 
-inline static std::map<std::wstring, TokenType> keywords = {
+const inline static std::wstring comment_line_symbol = L"//";
+const inline static std::wstring comment_block_begin_symbol = L"/*";
+const inline static std::wstring comment_block_end_symbol = L"*/";
+
+const inline static std::array<std::pair<std::wstring, TokenType>> keywords {
 	{L"for",		TokenType::FOR},		{L"while",		TokenType::WHILE},		{L"do",			TokenType::DO},
 	{L"int",		TokenType::I32}, 		{L"float",		TokenType::F32}, 		{L"i8",			TokenType::I8},
 	{L"i16", 		TokenType::I16}, 		{L"i32", 		TokenType::I32}, 		{L"i64", 		TokenType::I64},
 	{L"u8", 		TokenType::U8}, 		{L"u16", 		TokenType::U16}, 		{L"u32", 		TokenType::U32},
 	{L"u64", 		TokenType::U64}, 		{L"f32", 		TokenType::F32}, 		{L"f64", 		TokenType::F64},
+	{L"bool", 		TokenType::BOOL}, 		{L"true", 		TokenType::TRUE}, 		{L"false", 		TokenType::FALSE},
 	{L"nullptr", 	TokenType::NULLPTR}, 	{L"return", 	TokenType::RETURN}, 	{L"if", 		TokenType::IF},
 	{L"else", 		TokenType::ELSE},		{L"auto", 		TokenType::AUTO}, 		{L"break", 		TokenType::BREAK},
 	{L"case", 		TokenType::CASE}, 		{L"switch", 	TokenType::SWITCH}, 	{L"const", 		TokenType::CONST},
@@ -32,7 +37,7 @@ inline static std::map<std::wstring, TokenType> keywords = {
 	{L"union", 		TokenType::UNION},		{L"void", 		TokenType::VOID},		{L"sizeof", 	TokenType::SIZEOF},
 };
 
-inline static std::map<std::wstring, TokenType> symbols = {
+const inline static std::map<std::wstring, TokenType> symbols = {
 	{L"(",		TokenType::OPEN_PARENTHESES},	{L")",		TokenType::CLOSE_PARENTHESES},	{L"{",		TokenType::OPEN_BRACES},
 	{L"}",		TokenType::CLOSE_BRACES}, 		{L"[",		TokenType::OPEN_BRACKETS}, 		{L"]",		TokenType::CLOSE_BRACKETS},
 	{L"+", 		TokenType::PLUS},				{L"-", 		TokenType::DASH},				{L"*", 		TokenType::STAR},
