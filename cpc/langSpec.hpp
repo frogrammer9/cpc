@@ -13,16 +13,17 @@ enum TokenType {
 	SLASH, INCREMENT, DECREMENT, ARROW, DOT, COMMA, SEMICOLON, COLON, ASSIGMENT, PLUS_ASSIGN, MINUS_ASSIGN, 
 	MULTIPLY_ASSIGN, DEVIDE_ASSIGN, MODULO_ASSIGN, OR_ASSIGN, AND_ASSIGN, XOR_ASSIGN, SHL_ASSIGN, SHR_ASSIGN, TYLDA, VBAR, ANDPERCENT, CARET, EXCLEMATION, 
 	LOGIC_AND, LOGIC_OR, LOGIC_XOR, QUESTION, EQUAL, DIFFERENT, LESS, GREATER, LESS_OR_EQUAL, GREATER_OR_EQUAL, SHL, SHR,
+	COMMENT_LINE, COMMENT_BLOCK_BEGIN, COMMENT_BLOCK_END,
 	//LITERALS
 	INT_LITERAL, FLOAT_LITERAL, STRING_LITERAL, IDENT,
-	NONE
+	NONE,
 };
 
 const inline static std::wstring comment_line_symbol = L"//";
 const inline static std::wstring comment_block_begin_symbol = L"/*";
 const inline static std::wstring comment_block_end_symbol = L"*/";
 
-const inline static std::array<std::pair<std::wstring, TokenType>> keywords {
+const inline static std::map<std::wstring, TokenType> keywords = {
 	{L"for",		TokenType::FOR},		{L"while",		TokenType::WHILE},		{L"do",			TokenType::DO},
 	{L"int",		TokenType::I32}, 		{L"float",		TokenType::F32}, 		{L"i8",			TokenType::I8},
 	{L"i16", 		TokenType::I16}, 		{L"i32", 		TokenType::I32}, 		{L"i64", 		TokenType::I64},
@@ -54,6 +55,9 @@ const inline static std::map<std::wstring, TokenType> symbols = {
 	{L"!=", 	TokenType::DIFFERENT},			{L"<", 		TokenType::LESS},				{L">",		TokenType::GREATER},
 	{L"<=", 	TokenType::LESS_OR_EQUAL},		{L">=", 	TokenType::GREATER},			{L"<<", 	TokenType::SHL},
 	{L">>", 	TokenType::SHR},
+	{comment_line_symbol,			TokenType::COMMENT_LINE},
+	{comment_block_begin_symbol, 	TokenType::COMMENT_BLOCK_BEGIN},
+	{comment_block_end_symbol,	 	TokenType::COMMENT_BLOCK_END},
 };
 
 }
