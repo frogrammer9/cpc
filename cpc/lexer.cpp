@@ -35,7 +35,7 @@ std::vector<cpc::Token> cpc::tokenise(const std::wstring& code) {
 
 	enum State {
 		start,
-		base_select, zero_ignore, minus_analizer, dot_analizer,
+		base_select, zero_ignore, dot_analizer,
 		int10_literal, int16_literal, int2_literal, float_literal, string_literal, char_literal,
 		ident, string_special_char, string_special_char_num,
 		symbol, complete,
@@ -54,7 +54,6 @@ std::vector<cpc::Token> cpc::tokenise(const std::wstring& code) {
 			case start:
 				if(std::iswspace(code[inx])) inx++;
 				else if(code[inx] == '"') {state = string_literal; inx++;}
-				else if(code[inx] == '-') {state = minus_analizer; inx++;}
 				else if(code[inx] == '.') {state = dot_analizer; inx++;}
 				else if(code[inx] == '0') {state = base_select; inx++;}
 				else if(std::iswdigit(code[inx])) state = int10_literal;
@@ -75,13 +74,6 @@ std::vector<cpc::Token> cpc::tokenise(const std::wstring& code) {
 				else if(code[inx] == '.') {state = float_literal; buffer += '.'; inx++;}
 				else if(std::iswdigit(code[inx])) {state = int10_literal; inx++;}
 				else {state = complete; type = ls::INT_LITERAL; buffer += L"d0"; inx++;}
-			break;
-			case minus_analizer:
-				buffer += '-';
-				if(code[inx] == '0') {state = base_select; inx++; }
-				else if(code[inx] == '.') {state = float_literal; buffer += '.'; inx++;}
-				else if(std::iswdigit(code[inx])) state = int10_literal;
-				else {buffer.clear(); inx--; state = symbol;}
 			break;
 			case dot_analizer:
 				buffer += '.';
