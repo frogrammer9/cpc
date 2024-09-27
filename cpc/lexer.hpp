@@ -20,5 +20,6 @@ std::vector<Token> tokenise(const std::wstring& code);
 
 }
 std::wostream& operator<<(std::wostream& os, const cpc::Token& tok);
+std::wostream& operator<<(std::wostream& os, const cpc::ls::TokenType& type);
 
 #endif

@@ -22,6 +22,19 @@ std::wostream& operator<<(std::wostream& os, const cpc::Token& tok) {
 	}
 	return os;
 }
+std::wostream& operator<<(std::wostream& os, const cpc::ls::TokenType& type) {
+	switch(type) {
+		case cpc::ls::IDENT:			return os << L"[IDENT LITERAL]";
+		case cpc::ls::INT_LITERAL:		return os << L"[INT LITERAL]";
+		case cpc::ls::FLOAT_LITERAL:	return os << L"[FLOAT LITERAL]";
+		case cpc::ls::STRING_LITERAL:	return os << L"[STRING LITERAL]";
+		default:
+			for(auto& pair : cpc::ls::symbols) { if(pair.second == type) return os << pair.first; }
+			for(auto& pair : cpc::ls::keywords) { if(pair.second == type) return os << pair.first; }
+		break;
+	}
+	throw std::invalid_argument("<<TokenType");
+}
 //------------------------ HELPER FUNCS
 bool couldBeKey(const std::wstring& str, const std::map<std::wstring, cpc::ls::TokenType>& map) {
 	for(const auto& elem : map)

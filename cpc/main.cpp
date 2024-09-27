@@ -1,4 +1,5 @@
 #include "lexer.hpp"
+#include "parser.hpp"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -12,12 +13,17 @@ int main(int argc, char** argv) {
 	filebuffer << file.rdbuf();
 
 	std::wstring code = filebuffer.str();
+	code += L' ';
 
 	auto toks = cpc::tokenise(code);
 
 	for(auto a : toks) {
 		std::wcout << a << "\n";
 	}
+
+	auto ast = cpc::parse(toks);
+
+	ast->print();
 
 	return 0;
 }

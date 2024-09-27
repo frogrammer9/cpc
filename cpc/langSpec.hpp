@@ -62,5 +62,6 @@ const inline static std::map<std::wstring, TokenType> symbols = {
 
 }
 
+
 #endif
 
