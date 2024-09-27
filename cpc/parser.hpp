@@ -39,7 +39,7 @@ struct IntLiteralExpr : public ExprNode {
 		}
 	}
 	uint64_t val;
-	inline void print() override { std::wcout << L"IntLit: " << val << L"\n"; }
+	inline void print() override { std::wcout << L"IntLit: " << val; }
 };
 
 struct FloatLiteralExpr : public ExprNode {
@@ -88,6 +88,7 @@ struct BinExpr : public ExprNode {
 			case cpc::ls::GREATER: op = cpc::BinExpr::greater; break; case cpc::ls::GREATER_OR_EQUAL: op = cpc::BinExpr::greaterOrEqual; break;
 			default: std::wcerr << "Invalid operator (errors TODO)\n"; exit(1); break;
 		}
+		LHS = std::move(L); RHS = std::move(R);
 	}
 	enum Op {
 		add, sub, mul, div, modulo,
@@ -102,7 +103,7 @@ struct BinExpr : public ExprNode {
 		L"<<=", L">>=", L"&&", L"||", L"^^", L"==", L"!=", L"<", L"<=", L">", L">="};
 		std::wcout << L"Binop: (\n";
 		std::wcout << L"("; LHS->print(); std::wcout << L")\n";
-		std::wcout << "\"" << syms[op] << "\"";
+		std::wcout << "\"" << syms[op] << "\"\n";
 		std::wcout << L"("; RHS->print(); std::wcout << L")\n";
 		std::wcout << L")\n";
 	}
